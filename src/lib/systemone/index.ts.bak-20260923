@@ -1,0 +1,14 @@
+/**
+ * System One Local — barrel público.
+ *
+ * NOTA: NO se re-exporta `engine.ts` aquí. El motor es server-only: arrastra el
+ * proveedor de scoring (`provider.ts`, que lee `process.env` y hace `fetch`).
+ * Si el barrel lo incluyera, los Client Components (como `page.tsx`) lo
+ * empaquetarían para el navegador.
+ *
+ * El motor se importa directamente desde `./engine` SOLO en server code
+ * (API routes). Tipos y helpers puros son seguros para el cliente.
+ */
+export * from "./schema";
+export * from "./confidence";
+export * from "./presets";

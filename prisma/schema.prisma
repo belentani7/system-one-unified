@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// System One decision log — histórico de llamadas al endpoint /api/decide
+model DecisionLog {
+  id            String   @id @default(cuid())
+  presetId      String?
+  state         String
+  questionsJson String
+  answersJson   String
+  model         String
+  inputTokens   Int
+  outputTokens  Int      @default(0)
+  latencyMs     Int
+  requiresEscalation Boolean @default(false)
+  escalatedJson String   @default("[]")
+  threshold     Float    @default(0.6)
+  createdAt     DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([requiresEscalation])
+}

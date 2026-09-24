@@ -1,0 +1,132 @@
+{
+  "_comment": "Triaje de un hallazgo de seguridad (securetea-auditoria, escaneo-seguridad). 14 preguntas en una pasada. Funciona con el backend offline porque un hallazgo tecnico es texto denso en terminos propios: CVE, RCE, puerto, publico, sin autenticar. Cada opcion lleva su propio vocabulario, ninguna se define por negacion.",
+  "state": "Escaneo del 2026-09-23 sobre api.belentani.eu. El endpoint /api/upload acepta ficheros sin autenticar y sin comprobar el tipo MIME. Se pudo subir un .php y quedo accesible por URL publica. El servidor responde con cabecera Server: nginx/1.18.0. No hay rate limiting. El bucket S3 asociado tiene ACL public-read. Se observan claves AWS en un fichero .env.backup servido por HTTP.",
+  "model": "local-latest",
+  "confidence_threshold": 0.6,
+  "questions": {
+    "familia": {
+      "type": "choice",
+      "instructions": "A que familia de vulnerabilidad pertenece el hallazgo principal?",
+      "criteria": {
+        "ejecucion": "subida ejecutable php shell RCE codigo remoto deserializacion",
+        "acceso": "autenticacion sesion token privilegios autorizacion IDOR",
+        "exposicion": "bucket publico ACL fichero env claves credenciales filtradas",
+        "inyeccion": "SQL XSS comando LDAP plantilla",
+        "configuracion": "cabecera version banner TLS certificado cifrado debug"
+      }
+    },
+    "superficie": {
+      "type": "choice",
+      "instructions": "Donde esta el problema?",
+      "criteria": {
+        "endpoint": "ruta API endpoint upload handler peticion",
+        "almacenamiento": "bucket S3 disco base datos backup volcado",
+        "red": "puerto firewall DNS proxy nginx balanceador",
+        "cliente": "navegador frontend javascript cookie localStorage"
+      }
+    },
+    "explotabilidad": {
+      "type": "choice",
+      "instructions": "Que hace falta para explotarlo?",
+      "criteria": {
+        "trivial": "sin autenticar publico anonimo navegador curl directo",
+        "requiere_cuenta": "usuario registrado sesion iniciada token valido",
+        "requiere_privilegio": "administrador interno acceso previo red interna",
+        "teorico": "condiciones raras concatenacion improbable laboratorio"
+      }
+    },
+    "impacto": {
+      "type": "score",
+      "instructions": "Cual es el impacto si se explota?",
+      "criteria": [
+        "Informativo: revela version o detalle menor",
+        "Serio: acceso a datos o interrupcion parcial",
+        "Critico: control del servidor o fuga masiva de credenciales"
+      ]
+    },
+    "urgencia": {
+      "type": "score",
+      "instructions": "En que plazo hay que actuar?",
+      "criteria": [
+        "Siguiente ciclo: cabe en el mantenimiento normal",
+        "Esta semana: antes del proximo despliegue",
+        "Ahora: explotable en produccion y expuesto"
+      ]
+    },
+    "credenciales_expuestas": {
+      "type": "choice",
+      "instructions": "Hay credenciales al descubierto?",
+      "criteria": {
+        "expuestas": "claves AWS token secreto password env credenciales servido",
+        "protegidas": "cifrado vault variables entorno gestor secretos"
+      }
+    },
+    "rotacion_necesaria": {
+      "type": "choice",
+      "instructions": "Hay que rotar algun secreto como consecuencia?",
+      "criteria": {
+        "rotar": "claves AWS token API password filtrado publico expuesto",
+        "innecesario": "cabecera version configuracion cifrado banner"
+      }
+    },
+    "datos_personales": {
+      "type": "choice",
+      "instructions": "Puede afectar a datos de personas, con implicacion RGPD?",
+      "criteria": {
+        "afectados": "usuarios alumnado clientes correos mensajes perfiles padron",
+        "sin_datos": "infraestructura configuracion estatico documentacion"
+      }
+    },
+    "publico": {
+      "type": "choice",
+      "instructions": "Es alcanzable desde internet?",
+      "criteria": {
+        "internet": "publico URL dominio internet expuesto anonimo",
+        "interno": "localhost VPN red interna privado desarrollo"
+      }
+    },
+    "arreglo": {
+      "type": "choice",
+      "instructions": "Cual es el tipo de arreglo?",
+      "criteria": {
+        "codigo": "validar comprobar tipo MIME sanear autenticar middleware",
+        "configuracion": "ACL permisos politica cabecera bucket nginx",
+        "dependencia": "actualizar version parche libreria paquete",
+        "proceso": "rotar revocar auditar formacion revision"
+      }
+    },
+    "esfuerzo": {
+      "type": "score",
+      "instructions": "Cuanto cuesta arreglarlo?",
+      "criteria": [
+        "Minutos: un cambio de configuracion",
+        "Horas: tocar codigo y probar",
+        "Dias: rediseno o migracion"
+      ]
+    },
+    "falso_positivo": {
+      "type": "choice",
+      "instructions": "Parece un hallazgo confirmado o ruido del escaner?",
+      "criteria": {
+        "confirmado": "se pudo comprobado reproducido observan responde quedo accesible",
+        "ruido": "posible potencial podria sospecha sin confirmar heuristica"
+      }
+    },
+    "divulgable": {
+      "type": "choice",
+      "instructions": "Se puede escribir sobre esto en publico, por ejemplo como material del curso?",
+      "criteria": {
+        "tras_arreglo": "produccion dominio activo clientes datos reales",
+        "ejemplo_seguro": "laboratorio practica entorno pruebas ficticio simulado"
+      }
+    },
+    "bloquea_despliegue": {
+      "type": "choice",
+      "instructions": "Deberia frenar el proximo despliegue?",
+      "criteria": {
+        "bloquea": "critico produccion explotable publico credenciales",
+        "no_bloquea": "informativo menor cosmetico documentacion"
+      }
+    }
+  }
+}

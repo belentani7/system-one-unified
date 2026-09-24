@@ -1,0 +1,124 @@
+{
+  "_comment": "Auditoria de un repositorio a partir de sus metadatos. 13 preguntas en una sola pasada. REGLA DE DISENO, aprendida midiendo: cada opcion debe distinguirse por vocabulario propio que apareceria en un estado que encaja. El scorer offline casa terminos, asi que una opcion descrita con negaciones ('sin licencia') o cantidades ('hace meses') se contesta mal Y CON ALTA CONFIANZA. Sin noul: las binarias son choice de dos opciones, porque noul puede seguir sus etiquetas en vez del estado (laya issue #156).",
+  "state": "belentani-webgui-backup-2026-09-23 — Privado. Lenguaje HTML. Actualizado hace 6 horas. Sin descripcion, sin licencia, sin README, sin tests, sin CI. El nombre indica una copia de seguridad puntual del escritorio, con fecha en el propio nombre. Existe otro repositorio llamado belentani-unify con contenido aparentemente solapado. Nadie mas contribuye. Ninguna issue abierta. No esta desplegado en ningun sitio.",
+  "model": "local-latest",
+  "confidence_threshold": 0.6,
+  "questions": {
+    "accion": {
+      "type": "choice",
+      "instructions": "Que deberia pasar con este repositorio?",
+      "criteria": {
+        "mantener": "Proyecto vivo con identidad propia, merece cuidado continuo",
+        "archivar": "Terminado o congelado, conservar en solo lectura sin mantener",
+        "fusionar": "Duplica o solapa otro repositorio, deberia unificarse con el",
+        "borrar": "Copia temporal sin valor propio, reproducible desde otra fuente",
+        "revisar": "No hay informacion suficiente para decidir, abrirlo a mano"
+      }
+    },
+    "naturaleza": {
+      "type": "choice",
+      "instructions": "Que es realmente este repositorio?",
+      "criteria": {
+        "producto": "Aplicacion o sitio destinado a personas usuarias",
+        "libreria": "Codigo pensado para ser importado por otros proyectos",
+        "backup": "Copia de seguridad, snapshot o volcado de un espacio de trabajo",
+        "experimento": "Prueba, demo o borrador sin vocacion de permanencia",
+        "contenido": "Textos, media, documentacion o material didactico"
+      }
+    },
+    "riesgo_credenciales": {
+      "type": "choice",
+      "instructions": "Puede contener secretos filtrados?",
+      "criteria": {
+        "sospechoso": "backup copia volcado workspace escritorio snapshot seguridad",
+        "limpio": "libreria componentes documentacion diseno"
+      }
+    },
+    "riesgo_datos_personales": {
+      "type": "choice",
+      "instructions": "Puede contener datos personales de terceros, como mensajes, correos, listas de alumnado o usuarios?",
+      "criteria": {
+        "posible": "Si: menciona base de datos, usuarios, alumnado, mensajes, correos o exportaciones",
+        "improbable": "No: es codigo, diseno o documentacion sin datos de personas"
+      }
+    },
+    "solapamiento": {
+      "type": "choice",
+      "instructions": "Se solapa con otro repositorio mencionado en el estado?",
+      "criteria": {
+        "duplicado": "Si: el estado nombra otro repositorio con contenido parecido o igual",
+        "unico": "No: no hay indicio de otro repositorio que cubra lo mismo"
+      }
+    },
+    "publicable": {
+      "type": "choice",
+      "instructions": "Esta listo para ser publico tal como esta?",
+      "criteria": {
+        "listo": "Tiene descripcion, licencia y README suficientes para que alguien lo entienda",
+        "falta_documentacion": "Funciona pero no se explica: sin README, sin descripcion",
+        "no_publicar": "No deberia hacerse publico: backup, datos sensibles o material privado"
+      }
+    },
+    "licencia": {
+      "type": "choice",
+      "instructions": "Cual es la situacion de la licencia?",
+      "criteria": {
+        "permisiva": "MIT BSD ISC Apache",
+        "copyleft": "GPL AGPL LGPL MPL",
+        "ninguna": "sin licencia unlicensed propietario reservados"
+      }
+    },
+    "actividad": {
+      "type": "choice",
+      "instructions": "Que grado de actividad refleja el estado?",
+      "criteria": {
+        "activo": "horas hoy ayer minutos",
+        "reciente": "semanas",
+        "dormido": "meses anos abandonado archivado"
+      }
+    },
+    "coste_mantenimiento": {
+      "type": "score",
+      "instructions": "Cuanto cuesta mantener este repositorio vivo tal como se describe?",
+      "criteria": [
+        "Bajo: estatico, sin dependencias que caduquen",
+        "Medio: build y dependencias que hay que actualizar",
+        "Alto: servicios, base de datos y despliegue que vigilar"
+      ]
+    },
+    "valor": {
+      "type": "score",
+      "instructions": "Que valor tiene conservarlo, segun lo que el estado deja ver?",
+      "criteria": [
+        "Ninguno: reproducible o sustituido por otro",
+        "De archivo: sin uso actual pero con memoria del trabajo",
+        "Alto: aporta algo que no existe en otro sitio"
+      ]
+    },
+    "necesita_tests": {
+      "type": "choice",
+      "instructions": "Necesitaria tests para poder tocarlo con seguridad?",
+      "criteria": {
+        "si": "Es codigo con logica que se rompe en silencio al modificarlo",
+        "no": "Es estatico, contenido o una copia que no se va a modificar"
+      }
+    },
+    "urgencia_revision": {
+      "type": "score",
+      "instructions": "Con cuanta urgencia hay que mirarlo a mano?",
+      "criteria": [
+        "Sin prisa: puede esperar a la proxima limpieza",
+        "Esta semana: hay algo sin resolver",
+        "Ahora: posible exposicion de secretos o datos"
+      ]
+    },
+    "decision_automatizable": {
+      "type": "choice",
+      "instructions": "Se puede aplicar la accion sin que una persona lo abra antes?",
+      "criteria": {
+        "automatica": "La accion es reversible y de bajo riesgo: archivar, etiquetar, renombrar",
+        "revisar_antes": "La accion es destructiva o irreversible, o hay sospecha de secretos"
+      }
+    }
+  }
+}
