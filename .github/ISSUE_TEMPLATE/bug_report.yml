@@ -1,0 +1,33 @@
+name: Bug Report
+description: Reportar un error
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versión / commit
+      placeholder: "d7ebe6f o v1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Pasos para reproducir
+      placeholder: |
+        1. Ejecuta `npm run start:portable`
+        2. Llama a `POST /v1/systemone` con ...
+        3. Observa el error ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / stack trace
+      render: shell
