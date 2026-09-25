@@ -1,0 +1,7 @@
+# Reglas Cursor -- system-one-unified (compacto)
+
+- Stack: Node.js, Next.js, React, Tailwind, TypeScript, Docker, Deploy: Dockerfile. Cambios aditivos; NUNCA romper lo existente.
+- Fuente unica de verdad por dato; no duplicar. Docs en `docs/` en el mismo PR.
+- Sin secretos en git. Validacion de entrada + authZ por endpoint.
+- Commits convencionales. CI siempre verde.
+- Cadena documental: PRD -> SRS -> SDD -> ADR -> Plan antes de codigo.
